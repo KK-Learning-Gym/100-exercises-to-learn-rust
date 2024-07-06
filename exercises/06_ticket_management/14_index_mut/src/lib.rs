@@ -1,6 +1,9 @@
 // TODO: Implement `IndexMut<&TicketId>` and `IndexMut<TicketId>` for `TicketStore`.
 
-use std::ops::Index;
+use std::{
+    ops::{Index, IndexMut},
+    vec,
+};
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
@@ -72,6 +75,19 @@ impl Index<&TicketId> for TicketStore {
 
     fn index(&self, index: &TicketId) -> &Self::Output {
         &self[*index]
+    }
+}
+
+impl IndexMut<TicketId> for TicketStore {
+    fn index_mut(&mut self, index: TicketId) -> &mut Self::Output {
+        let vec_idx = self.tickets.iter().position(|t| t.id == index).unwrap();
+        self.tickets.index_mut(vec_idx)
+    }
+}
+
+impl IndexMut<&TicketId> for TicketStore {
+    fn index_mut(&mut self, index: &TicketId) -> &mut Self::Output {
+        &mut self[*index]
     }
 }
 
